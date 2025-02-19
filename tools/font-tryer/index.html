@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Font Text Box</title>
+    <style>
+        html, body {
+        	margin: 50px;
+        }
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('your-font-file.ttf') format('truetype'),
+                 url('your-font-file.otf') format('opentype'),
+                 url('your-font-file.woff') format('woff');
+        }
+
+        .custom-text {
+            font-family: 'CustomFont';
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Custom Font Text Box</h1>
+    <label for="fontUpload">Upload Font:</label>
+    <input type="file" id="fontUpload" accept=".ttf, .otf, .woff" onchange="loadFont(event)">
+    <br><br>
+    <textarea id="textBox" rows="10" cols="50" oninput="updateOutput()"></textarea>
+    <br><br>
+    <div id="output-32" class="custom-text" style="font-size: 32px;"></div>
+    <div id="output-64" class="custom-text" style="font-size: 64px;"></div>
+    <div id="output-128" class="custom-text" style="font-size: 128px;"></div>
+    <div id="output-256" class="custom-text" style="font-size: 256px;"></div>
+
+    <script>
+        function loadFont(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var fontData = e.target.result;
+                    var newStyle = document.createElement('style');
+                    newStyle.appendChild(document.createTextNode("\
+                        @font-face {\
+                            font-family: 'CustomFont';\
+                            src: url('" + fontData + "');\
+                        }\
+                    "));
+                    document.head.appendChild(newStyle);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateOutput() {
+            var textBox = document.getElementById('textBox');
+            var output32 = document.getElementById('output-32');
+            var output64 = document.getElementById('output-64');
+            var output128 = document.getElementById('output-128');
+            var output256 = document.getElementById('output-256');
+
+            var textValue = textBox.value.replace(/\n/g, '<br>');
+
+            output32.innerHTML = textValue;
+            output64.innerHTML = textValue;
+            output128.innerHTML = textValue;
+            output256.innerHTML = textValue;
+        }
+    </script>
+</body>
+
+</html>
